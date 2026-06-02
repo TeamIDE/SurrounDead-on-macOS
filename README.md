@@ -10,7 +10,12 @@ Run **SurrounDead** (Windows-only UE5/DX12, Steam App ID 1645820) on Apple Silic
 ./setup.sh your_steam_username
 ```
 
-That's it. The script handles Rosetta, Wine, D3DMetal 3.0, game download, Engine.ini, and PS4 controller support.
+That's it. The script handles Rosetta, Wine, D3DMetal 3.0, game download, and Engine.ini.
+
+To launch with PS4 controller:
+```
+./launch-mac.sh -ps4
+```
 
 ## What's in This Repo
 

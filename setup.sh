@@ -2,13 +2,12 @@
 set -e
 
 # SurrounDead on macOS — automated setup
-# Run this after mounting both GPTK DMGs from developer.apple.com/games:
-#   - Game Porting Toolkit 3.0
-#   - Evaluation environment for Windows games 3.0
+# Run this after mounting the Evaluation environment DMG from developer.apple.com/games
 #
 # Usage: ./setup.sh <steam-username> [bottle-uuid]
 #
-# If no bottle UUID is provided, a fresh Wine prefix is created at ~/surround-prefix
+# bottle-uuid  Use an existing Whisky bottle instead of creating a new prefix
+# To launch with PS4 controller: ./launch-mac.sh -ps4
 
 STEAM_USER="${1:-}"
 BOTTLE_UUID="${2:-}"
@@ -148,11 +147,9 @@ print "Launch script written to $LAUNCH"
 
 # ── Step 10: Controller support ───────────────────────────────────────────────
 
-print "Installing controller dependencies..."
+print "Installing PS4 controller dependencies..."
 brew install hidapi 2>/dev/null || true
 pip3 install --quiet hid pynput pyobjc-framework-Quartz
-
-# Copy controller script next to game exe
 cp "$SCRIPT_DIR/controller.py" "$GAME_DIR/controller.py"
 print "controller.py copied to $GAME_DIR"
 
@@ -161,11 +158,8 @@ print "controller.py copied to $GAME_DIR"
 echo ""
 echo "Setup complete."
 echo ""
-echo "To play:"
-echo "  $LAUNCH"
-echo ""
-echo "To use PS4 controller (run alongside the game):"
-echo "  DYLD_LIBRARY_PATH=/opt/homebrew/lib python3 $GAME_DIR/controller.py &"
+echo "To play:               $LAUNCH"
+echo "To play with PS4:      $LAUNCH -ps4"
 echo ""
 echo "When the AMD driver warning appears, click No."
-echo "Grant Accessibility + Bluetooth permissions to Terminal/Python when macOS prompts."
+echo "For PS4: grant Accessibility + Bluetooth permissions to Terminal/Python when prompted."
