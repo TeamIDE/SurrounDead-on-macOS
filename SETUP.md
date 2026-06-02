@@ -120,6 +120,50 @@ When the AMD driver warning appears, click **No** — this is just the game seei
 
 ---
 
+## Step 7 — PS4 Controller (Optional)
+
+SurrounDead's in-game controller binding doesn't work under Wine. Use the included `controller.py` script instead — it reads the DS4 directly via HID and maps inputs to keyboard/mouse.
+
+**Install dependencies:**
+```bash
+brew install hidapi
+pip3 install hid pynput pyobjc-framework-Quartz
+```
+
+**Grant permissions** (one-time, macOS will prompt):
+- System Settings → Privacy & Security → Accessibility → add Terminal (or Python)
+- System Settings → Privacy & Security → Bluetooth → add Terminal (or Python)
+
+**Connect controller:** pair via Bluetooth (hold PS + Share until light flashes). USB cable is charge-only on Mac.
+
+**Run alongside the game:**
+```bash
+DYLD_LIBRARY_PATH=/opt/homebrew/lib python3 ~/SurrounDead/controller.py &
+```
+
+**Button layout:**
+
+| Button | Action |
+|---|---|
+| Left stick | WASD movement |
+| D-pad | WASD movement |
+| Right stick | Mouse (camera) |
+| Cross (X) | F |
+| Circle | Space |
+| Square | J |
+| Triangle | Tab |
+| L1 (hold) | Left Shift |
+| L1 (double-tap) | Left Ctrl |
+| L2 | Z |
+| R1 | Right-click |
+| R2 | Left-click |
+| L3 | Left Ctrl |
+| R3 | V |
+| Options | Esc |
+| Share | Enter |
+
+---
+
 ## Troubleshooting
 
 **Black screen / black world:**
