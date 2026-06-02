@@ -50,9 +50,8 @@ Replace `YOUR_STEAM_USERNAME` with your Steam account. It will prompt for your p
 **Part A — Download from Apple (free account required):**
 1. Go to `developer.apple.com/games` in Safari
 2. Sign in with your Apple ID
-3. Click **Game Porting Toolkit 3.0** → View Details → Download the DMG
-4. Also download **Evaluation environment for Windows games 3.0** from the same page
-5. Double-click both DMGs to mount them
+3. Download **Evaluation environment for Windows games 3.0** (this is the only DMG you need)
+4. Double-click the DMG to mount it
 
 **Part B — Install the GCenX GPTK Wine cask:**
 ```bash

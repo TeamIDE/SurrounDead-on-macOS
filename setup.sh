@@ -146,10 +146,26 @@ EOF
 chmod +x "$LAUNCH"
 print "Launch script written to $LAUNCH"
 
+# ── Step 10: Controller support ───────────────────────────────────────────────
+
+print "Installing controller dependencies..."
+brew install hidapi 2>/dev/null || true
+pip3 install --quiet hid pynput pyobjc-framework-Quartz
+
+# Copy controller script next to game exe
+cp "$SCRIPT_DIR/controller.py" "$GAME_DIR/controller.py"
+print "controller.py copied to $GAME_DIR"
+
 # ── Done ──────────────────────────────────────────────────────────────────────
 
 echo ""
-echo "Setup complete. To play:"
+echo "Setup complete."
+echo ""
+echo "To play:"
 echo "  $LAUNCH"
 echo ""
+echo "To use PS4 controller (run alongside the game):"
+echo "  DYLD_LIBRARY_PATH=/opt/homebrew/lib python3 $GAME_DIR/controller.py &"
+echo ""
 echo "When the AMD driver warning appears, click No."
+echo "Grant Accessibility + Bluetooth permissions to Terminal/Python when macOS prompts."
