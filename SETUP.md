@@ -119,7 +119,19 @@ When the AMD driver warning appears, click **No** — this is just the game seei
 
 ---
 
-## Step 7 — PS4 Controller (Optional)
+## Step 7 — Steam Launch (Optional)
+
+`setup.sh` generates a `SurrounDead.app` bundle in `~/SurrounDead/`. Adding it to Steam lets you launch the game (with controller support) directly from your library.
+
+1. In Steam: **Games → Add a Non-Steam Game**
+2. Click **Browse** and select `~/SurrounDead/SurrounDead.app`
+3. Click **Add Selected Programs**
+
+On first launch macOS will ask for **Accessibility** and **Bluetooth** permissions for python3 — grant both. You only need to do this once.
+
+---
+
+## Step 8 — PS4 Controller (Optional)
 
 SurrounDead's in-game controller binding doesn't work under Wine. Use the included `controller.py` script instead — it reads the DS4 directly via HID and maps inputs to keyboard/mouse.
 

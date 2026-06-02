@@ -153,6 +153,46 @@ pip3 install --quiet hid pynput pyobjc-framework-Quartz
 cp "$SCRIPT_DIR/controller.py" "$GAME_DIR/controller.py"
 print "controller.py copied to $GAME_DIR"
 
+# ── Step 11: Steam .app wrapper ───────────────────────────────────────────────
+
+PYTHON3="$(which python3)"
+APP_DIR="$GAME_DIR/SurrounDead.app"
+APP_MACOS="$APP_DIR/Contents/MacOS"
+mkdir -p "$APP_MACOS"
+
+cat > "$APP_DIR/Contents/Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key>
+    <string>SurrounDead</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.local.surroundead</string>
+    <key>CFBundleName</key>
+    <string>SurrounDead</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+</dict>
+</plist>
+PLIST
+
+cat > "$APP_MACOS/SurrounDead" <<EOF
+#!/bin/bash
+export WINEPREFIX="$WINEPREFIX"
+export WINE="$GPTK_WINE"
+export WINEDEBUG=-all
+export ROSETTA_ADVERTISE_AVX=1
+export SDL_JOYSTICK_HIDAPI=0
+
+pkill -f "controller.py" 2>/dev/null
+DYLD_LIBRARY_PATH=/opt/homebrew/lib "$PYTHON3" "$GAME_DIR/controller.py" &
+
+"\$WINE" "$GAME_DIR/SurrounDead.exe" --in-process-gpu
+EOF
+chmod +x "$APP_MACOS/SurrounDead"
+print "Steam .app written to $APP_DIR"
+
 # ── Done ──────────────────────────────────────────────────────────────────────
 
 echo ""
@@ -161,5 +201,6 @@ echo ""
 echo "To play:               $LAUNCH"
 echo "To play with PS4:      $LAUNCH -ps4"
 echo ""
+echo "For Steam: add $APP_DIR as a Non-Steam Game."
 echo "When the AMD driver warning appears, click No."
-echo "For PS4: grant Accessibility + Bluetooth permissions to Terminal/Python when prompted."
+echo "Grant Accessibility + Bluetooth permissions to python3 when prompted (first launch only)."
