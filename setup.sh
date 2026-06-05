@@ -4,13 +4,15 @@ set -e
 # SurrounDead on macOS — automated setup
 # Run this after mounting the Evaluation environment DMG from developer.apple.com/games
 #
-# Usage: ./setup.sh <steam-username> [bottle-uuid]
+# Usage: ./setup.sh <steam-username> [bottle-uuid] [beta-branch]
 #
 # bottle-uuid  Use an existing Whisky bottle instead of creating a new prefix
+# beta-branch  Steam beta branch to install (e.g. "experimental" for v0.8+)
 # To launch with PS4 controller: ./launch-mac.sh -ps4
 
 STEAM_USER="${1:-}"
 BOTTLE_UUID="${2:-}"
+BETA_BRANCH="${3:-}"
 GAME_DIR="$HOME/SurrounDead"
 GPTK_WINE="/Applications/Game Porting Toolkit.app/Contents/Resources/wine/bin/wine64"
 EVAL_VOL="/Volumes/Evaluation environment for Windows games 3.0"
@@ -112,22 +114,34 @@ fi
 
 mkdir -p "$GAME_DIR"
 
+BETA_ARGS=""
+[ -n "$BETA_BRANCH" ] && BETA_ARGS="-beta $BETA_BRANCH"
+
 if [ ! -f "$GAME_DIR/SurrounDead.exe" ]; then
     if [ -z "$STEAM_USER" ]; then
         print "Skipping game download — no Steam username provided."
         print "Run manually:"
-        print "  steamcmd +@sSteamCmdForcePlatformType windows +login YOUR_USERNAME +force_install_dir $GAME_DIR +app_update 1645820 validate +quit"
+        print "  steamcmd +@sSteamCmdForcePlatformType windows +login YOUR_USERNAME +force_install_dir $GAME_DIR +app_update 1645820 $BETA_ARGS validate +quit"
     else
-        print "Downloading SurrounDead (~3GB)..."
+        print "Downloading SurrounDead${BETA_BRANCH:+ [$BETA_BRANCH]} (~3GB)..."
         steamcmd \
             +@sSteamCmdForcePlatformType windows \
             +login "$STEAM_USER" \
             +force_install_dir "$GAME_DIR" \
-            +app_update 1645820 validate \
+            +app_update 1645820 $BETA_ARGS validate \
             +quit
     fi
 else
     print "Game files already present"
+fi
+
+# ── Step 8b: VC++ 2015-2022 redist (required by v0.8+) ───────────────────────
+
+VCREDIST="$GAME_DIR/_CommonRedist/vcredist/2022/VC_redist.x64.exe"
+if [ -f "$VCREDIST" ] && [ ! -f "$WINEPREFIX/drive_c/windows/system32/vcruntime140.dll" ]; then
+    print "Installing VC++ 2015-2022 x64 redist into prefix..."
+    WINEPREFIX="$WINEPREFIX" WINEDEBUG=-all "$GPTK_WINE" "$VCREDIST" /quiet /norestart
+    print "VC++ redist OK"
 fi
 
 # ── Step 9: Write launch script ───────────────────────────────────────────────

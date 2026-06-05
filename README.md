@@ -8,9 +8,12 @@ Run **SurrounDead** (Windows-only UE5/DX12, Steam App ID 1645820) on Apple Silic
 # 1. Mount "Evaluation environment for Windows games 3.0" DMG from developer.apple.com/games
 # 2. Run:
 ./setup.sh your_steam_username
+
+# For the experimental branch (v0.8+):
+./setup.sh your_steam_username "" experimental
 ```
 
-That's it. The script handles Rosetta, Wine, D3DMetal 3.0, game download, and Engine.ini.
+That's it. The script handles Rosetta, Wine, D3DMetal 3.0, game download, VC++ redist, and Engine.ini.
 
 To launch with PS4 controller:
 ```

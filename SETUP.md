@@ -43,6 +43,15 @@ steamcmd +@sSteamCmdForcePlatformType windows \
 
 Replace `YOUR_STEAM_USERNAME` with your Steam account. It will prompt for your password and Steam Guard code. The download is ~3GB.
 
+For the **experimental** branch (v0.8+, newer content), add `-beta experimental` before `validate`:
+```bash
+steamcmd +@sSteamCmdForcePlatformType windows \
+         +login YOUR_STEAM_USERNAME \
+         +force_install_dir ~/SurrounDead \
+         +app_update 1645820 -beta experimental validate \
+         +quit
+```
+
 ---
 
 ## Step 3 — Get GPTK 3.0 (D3DMetal 3.0)
@@ -86,6 +95,20 @@ WINEPREFIX=~/surround-prefix /Applications/Game\ Porting\ Toolkit.app/Contents/R
 
 If using Whisky, note your bottle's UUID from:
 `~/Library/Containers/com.franke.Whisky/Bottles/<UUID>/`
+
+---
+
+## Step 4b — Install VC++ 2015-2022 Redist (v0.8+ requires it)
+
+The experimental branch ships a VC++ runtime dependency that v0.7 didn't have. Install the bundled installer into your prefix:
+
+```bash
+WINEPREFIX="$HOME/Library/Containers/com.franke.Whisky/Bottles/<YOUR-BOTTLE-UUID>" \
+  /Applications/Game\ Porting\ Toolkit.app/Contents/Resources/wine/bin/wine64 \
+  ~/SurrounDead/_CommonRedist/vcredist/2022/VC_redist.x64.exe /quiet /norestart
+```
+
+Without this, v0.8+ will pop a "Microsoft Visual C++ 2015-2022 Redistributable (x64) required" dialog on launch.
 
 ---
 
@@ -186,6 +209,9 @@ DYLD_LIBRARY_PATH=/opt/homebrew/lib python3 ~/SurrounDead/controller.py &
 
 **Game won't download with SteamCMD:**
 - Make sure to include `+@sSteamCmdForcePlatformType windows` — without it SteamCMD won't find the Windows depot on macOS
+
+**"Microsoft Visual C++ 2015-2022 Redistributable (x64) required" on launch:**
+- v0.8+ depends on it; v0.7 did not. Install the bundled redist into your prefix (see Step 4b).
 
 **Whisky Sparkle updater crash loop:**
 ```bash
